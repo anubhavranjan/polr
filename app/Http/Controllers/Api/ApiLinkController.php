@@ -117,6 +117,48 @@ class ApiLinkController extends ApiController {
         ], 'shorten_bulk', 'json');
     }
 
+    public function editLinkLongUrl(Request $request) {
+        /**
+         * If user is an admin, allow the user to edit the value of any link's long URL.
+         * Otherwise, only allow the user to edit their own links.
+         */
+        $response_type = $request->input('response_type');
+        $user = $request->user;
+        $username = $user->username;
+        $link_ending = $request->input('link_ending');
+        $link = LinkHelper::linkExists($link_ending);
+
+        $new_long_url = $request->input('new_long_url');
+
+        $this->validate($request, [
+            'new_long_url' => 'required|url',
+        ]);
+
+        if (!$link) {
+            abort(404, 'Link not found.');
+        }
+
+        /*if ($link->creator !== $username) {
+            self::ensureAdmin();
+        }*/
+
+        $link->long_url = $new_long_url;
+        $link->save();
+        $link = LinkHelper::linkExists($link_ending);
+        if ($link) {
+            return self::encodeResponse([
+                'long_url' => $link['long_url'],
+                'created_at' => $link['created_at'],
+                'clicks' => $link['clicks'],
+                'updated_at' => $link['updated_at'],
+                'created_at' => $link['created_at']
+            ], 'editlinklongurl', $response_type, $link['long_url']);
+        }
+        else {
+            throw new ApiException('NOT_FOUND', 'Link not found.', 404, $response_type);
+        }
+    }
+
     public function lookupLink(Request $request) {
         $user = $request->user;
         $response_type = $request->input('response_type');

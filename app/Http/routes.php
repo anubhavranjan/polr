@@ -72,6 +72,10 @@ $app->group(['prefix' => '/api/v2', 'namespace' => 'App\Http\Controllers\Api', '
     $app->post('action/togglelink', ['as' => 'api_toggle_url', 'uses' => 'ApiLinkController@toggleLink']);
     $app->get('action/togglelink', ['as' => 'api_toggle_url', 'uses' => 'ApiLinkController@toggleLink']);
 
+    /* API Edit Link Long URLs EndPoints */
+    $app->post('action/editlongurl', ['as' => 'api_edit_long_url', 'uses' => 'ApiLinkController@editLinkLongUrl']);
+    $app->get('action/editlongurl', ['as' => 'api_edit_long_url', 'uses' => 'ApiLinkController@editLinkLongUrl']);
+
     /* API lookup endpoints */
     $app->post('action/lookup', ['as' => 'api_lookup_url', 'uses' => 'ApiLinkController@lookupLink']);
     $app->get('action/lookup', ['as' => 'api_lookup_url', 'uses' => 'ApiLinkController@lookupLink']);
