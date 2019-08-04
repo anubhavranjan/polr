@@ -45,6 +45,25 @@ class ApiLinkController extends ApiController {
         return self::encodeResponse($formatted_link, 'shorten', $response_type);
     }
 
+    public function toggleLink(Request $request) {
+        $response_type = $request->input('response_type');
+        $user = $request->user;
+        $link_ending = $request->input('link_ending');
+        $link = LinkHelper::linkExists($link_ending);
+        if (!$link) {
+            throw new ApiException('MISSING_PARAMETERS', 'Link not found', 400, $response_type);
+        }
+        $current_status = $link->is_disabled;
+        $new_status = 1;
+        if ($current_status == 1) {
+            // if currently disabled, then enable
+            $new_status = 0;
+        }
+        $link->is_disabled = $new_status;
+        $link->save();
+        return self::encodeResponse($new_status, 'toggleLink', $response_type);
+    }
+
     public function shortenLinksBulk(Request $request) {
         $response_type = $request->input('response_type', 'json');
         $request_data = $request->input('data');

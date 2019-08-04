@@ -68,6 +68,10 @@ $app->group(['prefix' => '/api/v2', 'namespace' => 'App\Http\Controllers\Api', '
     $app->get('action/shorten', ['as' => 'api_shorten_url', 'uses' => 'ApiLinkController@shortenLink']);
     $app->post('action/shorten_bulk', ['as' => 'api_shorten_url_bulk', 'uses' => 'ApiLinkController@shortenLinksBulk']);
 
+    /* API Toggle Link EndPoints */
+    $app->post('action/togglelink', ['as' => 'api_toggle_url', 'uses' => 'ApiLinkController@toggleLink']);
+    $app->get('action/togglelink', ['as' => 'api_toggle_url', 'uses' => 'ApiLinkController@toggleLink']);
+
     /* API lookup endpoints */
     $app->post('action/lookup', ['as' => 'api_lookup_url', 'uses' => 'ApiLinkController@lookupLink']);
     $app->get('action/lookup', ['as' => 'api_lookup_url', 'uses' => 'ApiLinkController@lookupLink']);
