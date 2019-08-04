@@ -61,7 +61,22 @@ class ApiLinkController extends ApiController {
         }
         $link->is_disabled = $new_status;
         $link->save();
-        return self::encodeResponse($new_status, 'toggleLink', $response_type);
+        $link = LinkHelper::linkExists($link_ending);
+        if ($link) {
+            return self::encodeResponse([
+                'long_url' => $link['long_url'],
+                'short_url' => $link['short_url'],
+                'link_ending' => $link['link_ending'],
+                'created_at' => $link['created_at'],
+                'clicks' => $link['clicks'],
+                'is_disabled' => $link['is_disabled'] ? true : false,
+                'updated_at' => $link['updated_at'],
+            ], 'togglelink', $response_type, $link['is_disabled']);
+        }
+        else {
+            throw new ApiException('NOT_FOUND', 'Link not found.', 404, $response_type);
+        }
+        //return self::encodeResponse($new_status, 'toggleLink', $response_type);
     }
 
     public function shortenLinksBulk(Request $request) {
