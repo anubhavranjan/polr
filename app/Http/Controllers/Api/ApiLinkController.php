@@ -150,7 +150,8 @@ class ApiLinkController extends ApiController {
         ]);
 
         if (!$link) {
-            abort(404, 'Link not found.');
+            throw new ApiException('NOT_FOUND', 'Link not found.', 404, $response_type);
+            //abort(404, 'Link not found.');
         }
 
         /*if ($link->creator !== $username) {
